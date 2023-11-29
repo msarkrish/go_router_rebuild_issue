@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:go_router_rebuild_issue/app_routes.dart';
-import 'package:go_router_rebuild_issue/providers/detail_provider.dart';
-import 'package:go_router_rebuild_issue/providers/list_provider.dart';
+import 'package:go_router_rebuild_issue/data/user_data.dart';
 
-class ListPage extends ConsumerStatefulWidget {
+class ListPage extends StatefulWidget {
   const ListPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ListPage> createState() => _ListPageState();
+  State<ListPage> createState() => _ListPageState();
 }
 
-class _ListPageState extends ConsumerState<ListPage> {
+class _ListPageState extends State<ListPage> {
   @override
   Widget build(BuildContext context) {
     debugPrint('List Page Rebuilding');
-
-    final userDataList = ref.watch(userListProvider);
 
     return Scaffold(
       body: ListView.builder(
@@ -27,12 +23,10 @@ class _ListPageState extends ConsumerState<ListPage> {
               title: Text(userDataList[index].name),
               subtitle: Text(userDataList[index].country),
               onTap: () {
-                ref
-                    .read(selectedDetailProvider.notifier)
-                    .changeUserDetail(userData: userDataList[index]);
                 GoRouter.of(context).goNamed(
                   AppRoute.detail.location,
                   pathParameters: {'id': userDataList[index].id.toString()},
+                  extra: userDataList[index],
                 );
               },
             );

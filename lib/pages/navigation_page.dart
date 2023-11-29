@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_adaptive_scaffold/flutter_adaptive_scaffold.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:go_router_rebuild_issue/app_router.dart';
 import 'package:go_router_rebuild_issue/app_routes.dart';
 import 'package:go_router_rebuild_issue/custom_breakpoints.dart';
 
 /// [NavigationPage] contains [NavigationBar], [NavigationRail] and [Drawer].
 /// This is the root page which controls navigation of the app
 /// This also contains the [Drawer] widget
-class NavigationPage extends ConsumerStatefulWidget {
+class NavigationPage extends StatefulWidget {
   /// Creates NavigationPage with [key] and
   /// required argument [child] which will be the body
   /// This is used along which [ShellRoute] to make [NavigationBar] and
@@ -20,12 +18,11 @@ class NavigationPage extends ConsumerStatefulWidget {
   final Widget child;
 
   @override
-  ConsumerState<NavigationPage> createState() => _NavigationPageState();
+  State<NavigationPage> createState() => _NavigationPageState();
 }
 
-class _NavigationPageState extends ConsumerState<NavigationPage>
+class _NavigationPageState extends State<NavigationPage>
     with WidgetsBindingObserver {
-
   /// Pages used in [NavigationRail]
   late List<NavigationRailDestination> railDestinations;
 
@@ -34,7 +31,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
   late List<BottomNavigationBarItem> destinations;
 
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
-  GlobalKey<ScaffoldMessengerState>();
+      GlobalKey<ScaffoldMessengerState>();
 
   /// Navigates to appropriate route using the [index] via [GoRouter]
   void onItemTapped(int index, BuildContext context) {
@@ -54,18 +51,6 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
 
   @override
   Widget build(BuildContext context) {
-    /// returns the index of the [GoRouter] location
-    int? calculateSelectedIndexUsingLocation() {
-      final String location = ref.read(goRouterProvider).routerDelegate.currentConfiguration.fullPath;
-      if (location == AppRoute.dashboard.location) {
-        return AppRoute.dashboard.navigationIndex;
-      }
-      if (location == AppRoute.list.location) {
-        return AppRoute.list.navigationIndex;
-      }
-      return null;
-    }
-
     /// initializing destinations with pages
     railDestinations = [
       NavigationRailDestination(
@@ -138,8 +123,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
                           ),
                           type: BottomNavigationBarType.fixed,
                           items: destinations,
-                          currentIndex:
-                          calculateSelectedIndexUsingLocation() ?? 0,
+                          currentIndex: 0,
                           onTap: (idx) => onItemTapped(idx, context),
                           selectedIconTheme: IconThemeData(
                             color: Theme.of(context).colorScheme.primary,
@@ -171,7 +155,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
                       color: Theme.of(context).colorScheme.primary,
                       size: 18,
                     ),
-                    selectedIndex: calculateSelectedIndexUsingLocation(),
+                    selectedIndex: 0,
                     onDestinationSelected: (idx) => onItemTapped(idx, context),
                   ),
                 ),
